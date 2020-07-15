@@ -2,6 +2,8 @@
 
 This is a TypeScript library that implements AdGuard's content blocking rules.
 
+TODO remove
+
 *   [Idea](#idea)
 *   [Usage](#usage)
     *   [API description](#api-description)
