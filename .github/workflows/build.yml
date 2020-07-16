@@ -22,7 +22,7 @@ jobs:
           # Number of commits to fetch. 0 indicates all history.
           fetch-depth: 0
       - name: Setup Node.js environment
-        uses: actions/setup-node@v2
+        uses: actions/setup-node@v1
         with:
           node-version: ${{ env.NODE_VERSION }}
       - name: Get npm cache directory
