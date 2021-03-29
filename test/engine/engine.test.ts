@@ -1,10 +1,12 @@
 import { Engine } from '../../src/engine/engine';
-import { Request } from '../../src';
 import { StringRuleList } from '../../src/filterlist/rule-list';
 import { RuleStorage } from '../../src/filterlist/rule-storage';
 import { config, setConfiguration } from '../../src/configuration';
 import { CosmeticOption } from '../../src/engine/cosmetic-option';
 import { RequestType } from '../../src/request-type';
+import { Request } from '../../src/request';
+
+const createRequest = (url: string): Request => new Request(url, null, RequestType.Document);
 
 describe('TestEngineMatchRequest', () => {
     it('works if request matches rule', () => {
@@ -135,28 +137,28 @@ describe('TestEngineCosmeticResult - elemhide', () => {
     const engine = new Engine(new RuleStorage([list]));
 
     it('works if returns correct cosmetic elemhide result', () => {
-        let result = engine.getCosmeticResult('an-other-domain.org', CosmeticOption.CosmeticOptionAll);
+        let result = engine.getCosmeticResult(createRequest('an-other-domain.org'), CosmeticOption.CosmeticOptionAll);
 
         expect(result.elementHiding.generic.length).toEqual(2);
         expect(result.elementHiding.specific.length).toEqual(0);
         expect(result.elementHiding.genericExtCss.length).toBe(1);
         expect(result.elementHiding.specificExtCss.length).toBe(0);
 
-        result = engine.getCosmeticResult('example.org', CosmeticOption.CosmeticOptionAll);
+        result = engine.getCosmeticResult(createRequest('example.org'), CosmeticOption.CosmeticOptionAll);
 
         expect(result.elementHiding.generic.length).toEqual(1);
         expect(result.elementHiding.specific.length).toEqual(1);
         expect(result.elementHiding.genericExtCss.length).toBe(1);
         expect(result.elementHiding.specificExtCss.length).toBe(1);
 
-        result = engine.getCosmeticResult('example.org', CosmeticOption.CosmeticOptionCSS);
+        result = engine.getCosmeticResult(createRequest('example.org'), CosmeticOption.CosmeticOptionCSS);
 
         expect(result.elementHiding.generic.length).toEqual(0);
         expect(result.elementHiding.specific.length).toEqual(1);
         expect(result.elementHiding.genericExtCss.length).toBe(0);
         expect(result.elementHiding.specificExtCss.length).toBe(1);
 
-        result = engine.getCosmeticResult('example.org',
+        result = engine.getCosmeticResult(createRequest('example.org'),
             CosmeticOption.CosmeticOptionCSS | CosmeticOption.CosmeticOptionGenericCSS);
 
         expect(result.elementHiding.generic.length).toEqual(1);
@@ -185,28 +187,28 @@ describe('TestEngineCosmeticResult - cosmetic css', () => {
     const engine = new Engine(new RuleStorage([list]));
 
     it('works if returns correct cosmetic css result', () => {
-        let result = engine.getCosmeticResult('an-other-domain.org', CosmeticOption.CosmeticOptionAll);
+        let result = engine.getCosmeticResult(createRequest('an-other-domain.org'), CosmeticOption.CosmeticOptionAll);
 
         expect(result.CSS.generic.length).toEqual(1);
         expect(result.CSS.specific.length).toEqual(0);
         expect(result.CSS.genericExtCss.length).toBe(1);
         expect(result.CSS.specificExtCss.length).toBe(0);
 
-        result = engine.getCosmeticResult('example.org', CosmeticOption.CosmeticOptionAll);
+        result = engine.getCosmeticResult(createRequest('example.org'), CosmeticOption.CosmeticOptionAll);
 
         expect(result.CSS.generic.length).toEqual(1);
         expect(result.CSS.specific.length).toEqual(1);
         expect(result.CSS.genericExtCss.length).toBe(1);
         expect(result.CSS.specificExtCss.length).toBe(1);
 
-        result = engine.getCosmeticResult('example.org', CosmeticOption.CosmeticOptionCSS);
+        result = engine.getCosmeticResult(createRequest('example.org'), CosmeticOption.CosmeticOptionCSS);
 
         expect(result.CSS.generic.length).toEqual(0);
         expect(result.CSS.specific.length).toEqual(1);
         expect(result.CSS.genericExtCss.length).toBe(0);
         expect(result.CSS.specificExtCss.length).toBe(1);
 
-        result = engine.getCosmeticResult('example.org',
+        result = engine.getCosmeticResult(createRequest('example.org'),
             CosmeticOption.CosmeticOptionCSS | CosmeticOption.CosmeticOptionGenericCSS);
 
         expect(result.CSS.generic.length).toEqual(1);
@@ -230,17 +232,17 @@ describe('TestEngineCosmeticResult - js', () => {
         const list = new StringRuleList(1, rules.join('\n'), false);
         const engine = new Engine(new RuleStorage([list]));
 
-        let result = engine.getCosmeticResult('an-other-domain.org', CosmeticOption.CosmeticOptionAll);
+        let result = engine.getCosmeticResult(createRequest('an-other-domain.org'), CosmeticOption.CosmeticOptionAll);
 
         expect(result.JS.generic.length).toEqual(1);
         expect(result.JS.specific.length).toEqual(0);
 
-        result = engine.getCosmeticResult('example.org', CosmeticOption.CosmeticOptionAll);
+        result = engine.getCosmeticResult(createRequest('example.org'), CosmeticOption.CosmeticOptionAll);
 
         expect(result.JS.generic.length).toEqual(1);
         expect(result.JS.specific.length).toEqual(1);
 
-        result = engine.getCosmeticResult('example.org', CosmeticOption.CosmeticOptionJS);
+        result = engine.getCosmeticResult(createRequest('example.org'), CosmeticOption.CosmeticOptionJS);
 
         expect(result.JS.generic.length).toEqual(1);
         expect(result.JS.specific.length).toEqual(1);
@@ -250,17 +252,17 @@ describe('TestEngineCosmeticResult - js', () => {
         const list = new StringRuleList(1, rules.join('\n'), false, true);
         const engine = new Engine(new RuleStorage([list]));
 
-        let result = engine.getCosmeticResult('an-other-domain.org', CosmeticOption.CosmeticOptionAll);
+        let result = engine.getCosmeticResult(createRequest('an-other-domain.org'), CosmeticOption.CosmeticOptionAll);
 
         expect(result.JS.generic.length).toEqual(0);
         expect(result.JS.specific.length).toEqual(0);
 
-        result = engine.getCosmeticResult('example.org', CosmeticOption.CosmeticOptionAll);
+        result = engine.getCosmeticResult(createRequest('example.org'), CosmeticOption.CosmeticOptionAll);
 
         expect(result.JS.generic.length).toEqual(0);
         expect(result.JS.specific.length).toEqual(0);
 
-        result = engine.getCosmeticResult('example.org', CosmeticOption.CosmeticOptionJS);
+        result = engine.getCosmeticResult(createRequest('example.org'), CosmeticOption.CosmeticOptionJS);
 
         expect(result.JS.generic.length).toEqual(0);
         expect(result.JS.specific.length).toEqual(0);
@@ -277,5 +279,84 @@ describe('$urlblock modifier', () => {
         const result = engine.matchRequest(request).getBasicResult();
         expect(result).toBeTruthy();
         expect(result?.getText()).toEqual(urlblock);
+    });
+});
+
+describe('Badfilter modifier', () => {
+    it('checks badfilter rule negates network rule', () => {
+        const rules = [
+            '$script,domain=example.com|example.org',
+            '$script,domain=example.com,badfilter',
+        ];
+        const list = new StringRuleList(1, rules.join('\n'), false);
+        const engine = new Engine(new RuleStorage([list]));
+
+        expect(engine.getRulesCount()).toBe(2);
+
+        let request = new Request('https://example.com', 'https://example.com', RequestType.Script);
+        let result = engine.matchRequest(request);
+        expect(result.basicRule).toBeNull();
+
+        request = new Request('https://example.org', 'https://example.org', RequestType.Script);
+        result = engine.matchRequest(request);
+        expect(result.basicRule).not.toBeNull();
+    });
+});
+
+describe('Match subdomains', () => {
+    it('should find css rules for subdomains', () => {
+        const specificHidingRule = 'example.org##div';
+        const specificHidingRuleSubDomain = 'sub.example.org##h1';
+        const rules = [
+            specificHidingRule,
+            specificHidingRuleSubDomain,
+        ];
+        const list = new StringRuleList(1, rules.join('\n'), false, false);
+        const engine = new Engine(new RuleStorage([list]));
+
+        let res = engine.getCosmeticResult(createRequest('www.example.org'), CosmeticOption.CosmeticOptionAll);
+        expect(res).toBeDefined();
+        expect(res.elementHiding.specific[0].getText()).toBe(specificHidingRule);
+
+        res = engine.getCosmeticResult(createRequest('sub.example.org'), CosmeticOption.CosmeticOptionAll);
+        expect(res).toBeDefined();
+        expect(res.elementHiding.specific).toHaveLength(2);
+        expect(res.elementHiding.specific.map((rule) => rule.getText()).includes(specificHidingRule))
+            .toBeTruthy();
+        expect(res.elementHiding.specific.map((rule) => rule.getText()).includes(specificHidingRuleSubDomain))
+            .toBeTruthy();
+    });
+
+    it('should find js rules for subdomains', () => {
+        const scriptletRule = 'example.org#%#//scriptlet("abort-on-property-read", "alert")';
+        const subDomainScriptletRule = 'sub.example.org#%#//scriptlet("abort-on-property-read", "alert")';
+        const otherSubDomainScriptletRule = 'other-sub.example.org#%#//scriptlet("abort-on-property-read", "alert")';
+
+        const rules = [
+            scriptletRule,
+            subDomainScriptletRule,
+            otherSubDomainScriptletRule,
+        ];
+
+        const list = new StringRuleList(1, rules.join('\n'), false, false);
+        const engine = new Engine(new RuleStorage([list]));
+
+        const resOne = engine.getCosmeticResult(
+            createRequest('https://example.org/test'),
+            CosmeticOption.CosmeticOptionAll,
+        );
+        expect(resOne).toBeDefined();
+        expect(resOne.JS.specific[0].getText()).toBe(scriptletRule);
+
+        const resTwo = engine.getCosmeticResult(
+            createRequest('https://sub.example.org/test'),
+            CosmeticOption.CosmeticOptionAll,
+        );
+        expect(resTwo).toBeDefined();
+        expect(resTwo.JS.specific).toHaveLength(2);
+        const rulesTexts = resTwo.JS.specific.map((rule) => rule.getText());
+        expect(rulesTexts.includes(scriptletRule)).toBeTruthy();
+        expect(rulesTexts.includes(subDomainScriptletRule)).toBeTruthy();
+        expect(rulesTexts.includes(otherSubDomainScriptletRule)).toBeFalsy();
     });
 });
