@@ -1,0 +1,17 @@
+{
+  "name": "manifest-v3",
+  "version": "0.0.1",
+  "description": "Sample extension with manifest V3",
+  "author": "adguard@adguard.com",
+  "license": "GPL-3.0",
+  "scripts": {
+    "build": "build:tsurlfilter && build:extension",
+    "build:extension": "babel-node ./scripts/build",
+    "build:tsurlfilter": "export PACKAGE_OUTPUT_PATH=\"$(pwd)/node_modules/@adguard/tsurlfilter\"; cd ../../ && yarn build"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.13.14",
+    "@babel/node": "^7.13.13",
+    "webpack": "^5.28.0"
+  }
+}

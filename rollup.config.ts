@@ -7,6 +7,8 @@ import typescript from '@rollup/plugin-typescript';
 import json from '@rollup/plugin-json';
 import pkg from './package.json';
 
+console.log(process.env.PACKAGE_OUTPUT_PATH);
+
 const libraryName = 'TSUrlFilter';
 const contentScriptLibraryName = 'TSUrlFilterContentScript';
 

@@ -1,6 +1,6 @@
 const fs = require('fs-extra');
 
-const EXTENSION_SRC = './sample-extension/';
+const EXTENSION_SRC = './manifest-v2/';
 const TSURLFILTER_DIST = './dist/tsurlfilter.esm.js';
 const TSURLFILTER_CONTENT_SCRIPT_DIST = './dist/TSUrlFilterContentScript.umd.js';
 const EXTENSION_DIST = './dist-extension/';
